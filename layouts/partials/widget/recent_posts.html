@@ -1,0 +1,26 @@
+{{- if len .Site.Pages -}}
+  {{- $site := .Site -}}
+  {{- $params := .Site.Params -}}
+  {{- $mainSections := $params.mainSections -}}
+  {{- $limit := $params.recent_posts_limits -}}
+  {{- range $authorKey := slice "luoji" "meimei" -}}
+  {{- $authorPosts := where (where $site.RegularPages "Section" "in" $mainSections) "Params.author" $authorKey | first $limit -}}
+  <div class="widget-wrapper author-widget" data-author="{{ $authorKey }}" {{ if eq $authorKey "meimei" }}style="display:none"{{ end }}>
+    <div
+      class="widget-wrap"
+      data-aos="{{ $.Site.Params.animation.options.home.widget }}"
+    >
+      <h3 class="widget-title">{{ i18n "recent_posts" }}</h3>
+      <div class="widget">
+        <ul>
+          {{- range $authorPosts -}}
+            <li>
+              <a href="{{ .Permalink | relURL }}" title="{{ .Title }}">{{ .Title }}</a>
+            </li>
+          {{- end -}}
+        </ul>
+      </div>
+    </div>
+  </div>
+  {{- end -}}
+{{- end -}}

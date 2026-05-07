@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fce4ec;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8bbd0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- 背景圆 -->
+  <circle cx="64" cy="64" r="62" fill="url(#bg)" stroke="#f48fb1" stroke-width="2"/>
+  <!-- 蝴蝶结装饰 -->
+  <path d="M44 30 Q54 18 64 30 Q54 26 44 30" fill="#f48fb1" opacity="0.5"/>
+  <path d="M84 30 Q74 18 64 30 Q74 26 84 30" fill="#f48fb1" opacity="0.5"/>
+  <!-- 文字 -->
+  <text x="64" y="52" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#c2185b" font-weight="bold">少女</text>
+  <text x="64" y="72" text-anchor="middle" font-size="13" font-family="sans-serif" fill="#c2185b" font-weight="bold">祈祷中</text>
+  <!-- 省略号动画点 -->
+  <circle cx="52" cy="88" r="2.5" fill="#e91e63"><animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite" begin="0s"/></circle>
+  <circle cx="64" cy="88" r="2.5" fill="#e91e63"><animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite" begin="0.3s"/></circle>
+  <circle cx="76" cy="88" r="2.5" fill="#e91e63"><animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite" begin="0.6s"/></circle>
+  <!-- 花瓣飘落 -->
+  <circle cx="20" cy="30" r="3" fill="#f48fb1" opacity="0.4">
+    <animate attributeName="cy" values="20;110" dur="6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4;0" dur="6s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="108" cy="20" r="2.5" fill="#f06292" opacity="0.3">
+    <animate attributeName="cy" values="10;120" dur="5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0" dur="5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="100" cy="110" r="2" fill="#f48fb1" opacity="0.3">
+    <animate attributeName="cx" values="100;20" dur="7s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0" dur="7s" repeatCount="indefinite"/>
+  </circle>
+</svg>

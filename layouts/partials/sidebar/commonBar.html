@@ -1,0 +1,155 @@
+{{- $params := .ctx.Site.Params -}}
+{{- $mobile := .mobile -}}
+{{- $showMenu := true -}}
+{{- /* Backward compatibility */ -}}
+{{- if and (reflect.IsMap $params.sidebar) (isset $params.sidebar "menu") -}}
+  {{- $showMenu = $params.sidebar.menu -}}
+{{- end -}}
+<div class="sidebar-author">
+  <img
+    data-src="{{ "avatar/" | relURL }}{{ $params.avatar }}"
+    data-sizes="auto"
+    alt="{{ $params.author }}"
+    class="lazyload"
+  />
+  <div class="sidebar-author-name-row">
+    <div class="sidebar-author-name">{{ $params.author }}</div>
+    <div class="author-switch-sidebar">
+      <button class="author-switch-btn" data-author="luoji" title="切换到罗辑">
+        <span class="author-switch-dot" style="background:#4a90d9"></span>
+      </button>
+      <button class="author-switch-btn" data-author="meimei" title="切换到妹妹">
+        <span class="author-switch-dot" style="background:#e87d9e"></span>
+      </button>
+    </div>
+  </div>
+  <div class="sidebar-description">{{ $params.description }}</div>
+</div>
+{{- $allPosts := (where .ctx.Page.Site.RegularPages "Section" "in" $params.mainSections) -}}
+{{- $luojiPosts := where $allPosts "Params.author" "luoji" -}}
+{{- $meimeiPosts := where $allPosts "Params.author" "meimei" -}}
+
+{{- /* 按作者统计分类数量 */ -}}
+{{- $luojiCats := slice -}}
+{{- $meimeiCats := slice -}}
+{{- range .ctx.Site.Taxonomies.categories -}}
+  {{- range where .Pages "Params.author" "luoji" -}}{{- $luojiCats = $luojiCats | append .Params.categories -}}{{- end -}}
+  {{- range where .Pages "Params.author" "meimei" -}}{{- $meimeiCats = $meimeiCats | append .Params.categories -}}{{- end -}}
+{{- end -}}
+{{- $luojiCats = $luojiCats | uniq -}}
+{{- $meimeiCats = $meimeiCats | uniq -}}
+
+{{- /* 按作者统计标签数量 */ -}}
+{{- $luojiTags := slice -}}
+{{- $meimeiTags := slice -}}
+{{- range .ctx.Site.Taxonomies.tags -}}
+  {{- range where .Pages "Params.author" "luoji" -}}{{- $luojiTags = $luojiTags | append .Params.tags -}}{{- end -}}
+  {{- range where .Pages "Params.author" "meimei" -}}{{- $meimeiTags = $meimeiTags | append .Params.tags -}}{{- end -}}
+{{- end -}}
+{{- $luojiTags = $luojiTags | uniq -}}
+{{- $meimeiTags = $meimeiTags | uniq -}}
+
+<div class="sidebar-state">
+  {{- /* 罗辑的数据 - 新排版 */ -}}
+  <div class="author-state" data-author="luoji">
+    <div class="author-state-row">
+      <div class="author-state-item">
+        <span class="author-state-label">{{ i18n "sidebar.post" }}</span>
+        <span class="author-state-number">{{ len $luojiPosts }}</span>
+      </div>
+      <div class="author-state-item">
+        <a href="{{ "categories/" | relLangURL }}" aria-label="sidebar-state-category-link">
+          <span class="author-state-label">{{ i18n "sidebar.category" }}</span>
+          <span class="author-state-number">{{ len $luojiCats }}</span>
+        </a>
+      </div>
+      <div class="author-state-item">
+        <a href="{{ "tags/" | relLangURL }}" aria-label="sidebar-state-tag-link">
+          <span class="author-state-label">{{ i18n "sidebar.tag" }}</span>
+          <span class="author-state-number">{{ len $luojiTags }}</span>
+        </a>
+      </div>
+    </div>
+    <div class="author-state-divider"></div>
+  </div>
+  {{- /* 妹妹的数据 - 新排版 */ -}}
+  <div class="author-state" data-author="meimei" style="display:none">
+    <div class="author-state-row">
+      <div class="author-state-item">
+        <span class="author-state-label">{{ i18n "sidebar.post" }}</span>
+        <span class="author-state-number">{{ len $meimeiPosts }}</span>
+      </div>
+      <div class="author-state-item">
+        <a href="{{ "categories/" | relLangURL }}" aria-label="sidebar-state-category-link">
+          <span class="author-state-label">{{ i18n "sidebar.category" }}</span>
+          <span class="author-state-number">{{ len $meimeiCats }}</span>
+        </a>
+      </div>
+      <div class="author-state-item">
+        <a href="{{ "tags/" | relLangURL }}" aria-label="sidebar-state-tag-link">
+          <span class="author-state-label">{{ i18n "sidebar.tag" }}</span>
+          <span class="author-state-number">{{ len $meimeiTags }}</span>
+        </a>
+      </div>
+    </div>
+    <div class="author-state-divider"></div>
+  </div>
+</div>
+<div class="sidebar-social" {{ if not (or $showMenu $mobile) }}style="margin-bottom: 20px;"{{ end }}>
+  {{- if reflect.IsSlice $params.social -}}
+    {{- range $social := $params.social -}}
+      <div class="icon-{{ $social.name }} sidebar-social-icon">
+        <a
+          href="{{ $social.url }}"
+          itemprop="url"
+          target="_blank"
+          aria-label="{{ $social.name }}"
+          rel="noopener nofollow noreferrer"
+        ></a>
+      </div>
+    {{- end -}}
+  {{- else -}}
+    {{- range $name, $url := $params.social -}}
+      <div class="icon-{{ $name }} sidebar-social-icon">
+        <a
+          href="{{ $url }}"
+          itemprop="url"
+          target="_blank"
+          aria-label="{{ $name }}"
+          rel="noopener nofollow noreferrer"
+        ></a>
+      </div>
+    {{- end -}}
+  {{- end -}}
+</div>
+{{- if or $showMenu $mobile -}}
+<div class="sidebar-menu">
+  {{- range $params.menu -}}
+    <div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="{{ .url | relLangURL }}"
+        aria-label="{{ i18n .name }}"
+      ></a>
+      {{- if ne .icon false -}}
+        <div class='sidebar-menu-icon icon {{ if or (and (eq .icon "e62b") ($params.icon_font)) (and (eq .icon "f6ad") (not $params.icon_font)) (not .icon) }}rotate{{ end }}'>
+          {{- if .icon -}}
+            {{- if and (strings.Contains .icon ".") (strings.Contains .icon "/") -}}
+              <img src="{{ .icon | relURL }}" alt="{{ .name }} icon" class="" style="height: 1em;">
+            {{- else -}}
+              &#x{{- .icon -}};
+            {{- end -}}
+          {{- else -}}
+            {{- if $params.icon_font -}}
+              &#xe62b;
+            {{- else -}}
+              &#xf6ad;
+            {{- end -}}
+          {{- end -}}
+        </div>
+      {{- end -}}
+      <div class="sidebar-menu-link">{{ i18n .name }}</div>
+    </div>
+  {{- end -}}
+</div>
+{{- end -}}

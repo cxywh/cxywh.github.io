@@ -1,0 +1,179 @@
+/* ====== 双作者侧边栏切换按钮 ====== */
+
+.sidebar-author-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.author-switch-sidebar {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.author-switch-btn {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0.4;
+}
+
+.author-switch-btn.active {
+  opacity: 1;
+  border-color: var(--author-color, #4a90d9);
+  transform: scale(1.15);
+}
+
+.author-switch-btn:hover {
+  opacity: 0.8;
+}
+
+.author-switch-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* ====== 主题色适配 ====== */
+:root {
+  --author-color: #4a90d9;
+}
+
+body.author-luoji {
+  --author-color: #4a90d9;
+}
+
+body.author-meimei {
+  --author-color: #e87d9e;
+}
+
+/* 妹妹副标题图片样式：在 h1 正下方居中显示 */
+body.author-meimei #subtitle-wrap {
+  text-align: center !important;
+  display: block !important;
+}
+.meimei-subtitle-wrapper {
+  display: block !important;
+  text-align: center !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+.meimei-subtitle-img {
+  height: 128px !important;
+  width: auto !important;
+  max-width: 100% !important;
+  object-fit: contain;
+  display: inline-block;
+}
+/* 确保副标题容器正常显示图片 */
+#subtitle-wrap {
+  text-align: center !important;
+  height: auto !important;
+  min-height: 140px;
+  overflow: visible !important;
+  display: block !important;
+}
+#subtitle-wrap .meimei-subtitle-wrapper {
+  text-align: center !important;
+}
+
+/* ====== sidebar-state 排版重设计 ====== */
+.author-state {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 20px 0 !important;
+}
+
+.author-state-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.author-state-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+}
+
+.author-state-item .author-state-label {
+  font-size: 11px;
+  opacity: 0.65;
+  margin-bottom: 2px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.author-state-item .author-state-number {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  line-height: 1.2;
+  color: var(--red-0);
+}
+
+.author-state-item a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.author-state-divider {
+  width: 60%;
+  height: 1px;
+  background: var(--red-1);
+  opacity: 0.2;
+  margin: 4px 0;
+}
+
+/* 旧样式隐藏 */
+.author-state > .sidebar-state-article,
+.author-state > a.sidebar-state-category,
+.author-state > a.sidebar-state-tag,
+.author-state > .sidebar-state-article > div:first-child,
+.author-state > a > div:first-child {
+  display: none !important;
+}
+
+/* 作者主题色覆盖 - 侧边栏 */
+/* 强制覆盖所有 red 变量 */
+:root {
+  --author-color: #4a90d9;
+  --red-0: #4a90d9;
+  --red-1: #4a90d9;
+  --red-2: #4a90d9;
+  --red-3: #4a90d9;
+  --red-4: #d6e4f5;
+  --red-5: #d6e4f5;
+  --red-5-5: #e8f0fa;
+  --color-red-6-shadow: rgba(74, 144, 217, 0.6);
+  --color-red-3-shadow: rgba(74, 144, 217, 0.3);
+  --color-link: #4a90d9;
+  --color-h2-after: #4a90d9;
+}
+
+/* ====== 全局隐藏 RSS 订阅按钮 ====== */
+#nav-rss-link {
+  display: none !important;
+}
+
+/* ====== 罗辑板块侧边栏移到左侧 ====== */
+body.author-luoji #content.sidebar-right {
+  flex-direction: row !important;
+}

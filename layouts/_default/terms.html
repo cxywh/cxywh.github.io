@@ -1,0 +1,8 @@
+{{- define "main" -}}
+  <div
+    class="archives-outer-wrap"
+    data-aos="{{ .Site.Params.animation.options.archive.whole }}"
+  >
+    {{- partial "archives.html" . -}}
+  </div>
+{{- end -}}

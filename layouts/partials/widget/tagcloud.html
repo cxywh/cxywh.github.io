@@ -1,0 +1,38 @@
+{{- if len .Site.Taxonomies.tags -}}
+  {{- $site := .Site -}}
+  {{- $params := .Site.Params -}}
+  {{- $mainSections := $params.mainSections -}}
+  {{- $limit := $params.tagcloud_limits -}}
+  {{- range $authorKey := slice "luoji" "meimei" -}}
+<div class="widget-wrapper author-widget" data-author="{{ $authorKey }}" {{ if eq $authorKey "meimei" }}style="display:none"{{ end }}>
+  <div
+    class="widget-wrap"
+    data-aos="{{ $.Site.Params.animation.options.home.widget }}"
+  >
+    <h3 class="widget-title">{{ i18n "tagcloud" }}</h3>
+    {{- $authorPosts := where (where $site.RegularPages "Section" "in" $mainSections) "Params.author" $authorKey -}}
+    <div class="widget tagcloud">
+      {{- $counter := 0 -}}
+      {{- range $site.Taxonomies.tags -}}
+        {{- if lt $counter $limit -}}
+          {{- $tagAuthorPages := where .Pages "Params.author" $authorKey -}}
+          {{- if gt (len $tagAuthorPages) 0 -}}
+            {{- $weight := 10 -}}
+            {{- if gt (len $authorPosts) 0 -}}
+              {{- $weight = add 10 (mul 10 (div (len $tagAuthorPages) (len $authorPosts))) -}}
+            {{- end -}}
+            <a
+              style="font-size:{{ $weight }}px"
+              href="{{ .Page.RelPermalink }}"
+              aria-label="{{ i18n "tag" }}: {{ .Page.Title }}"
+              >{{ .Page.Title }}</a
+            >
+          {{- $counter = add $counter 1 -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    </div>
+  </div>
+</div>
+  {{- end -}}
+{{- end -}}

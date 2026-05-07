@@ -1,0 +1,138 @@
+{{- $currentAuthor := .Params.author | default "luoji" -}}
+{{- $allPosts := where (where .Site.RegularPages "Section" "in" .Site.Params.mainSections) "Params.author" $currentAuthor -}}
+{{- /* 按作者选封面池 */ -}}
+{{- $authorCoversKey := "covers" -}}
+{{- if eq $currentAuthor "luoji" -}}
+  {{- $authorCoversKey = "covers-luoji" -}}
+{{- else if eq $currentAuthor "meimei" -}}
+  {{- $authorCoversKey = "covers-meimei" -}}
+{{- end -}}
+{{- $authorCovers := index .Site.Data $authorCoversKey -}}
+{{- $sortedPosts := sort $allPosts "Date" "asc" -}}
+
+{{- $prevPost := false -}}
+{{- $nextPost := false -}}
+{{- $found := false -}}
+{{- range $index, $p := $sortedPosts -}}
+  {{- if eq $p.Permalink $.Permalink -}}
+    {{- if gt $index 0 -}}
+      {{- $prevPost = index $sortedPosts (sub $index 1) -}}
+    {{- end -}}
+    {{- $nextIndex := add $index 1 -}}
+    {{- if lt $nextIndex (len $sortedPosts) -}}
+      {{- $nextPost = index $sortedPosts $nextIndex -}}
+    {{- end -}}
+    {{- $found = true -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if or $prevPost $nextPost -}}
+  <nav
+    id="article-nav"
+    class="article-nav-{{ $currentAuthor }}"
+    aria-label="Article navigation"
+    data-aos="{{ .Site.Params.animation.options.article.nav }}"
+  >
+    {{- if $prevPost -}}
+      <div class="article-nav-link-wrap left">
+        {{- if and $prevPost.Params.cover (not (strings.HasPrefix $prevPost.Params.cover "rgb")) -}}
+          <img
+            data-src="{{ $prevPost.Params.cover | relURL }}"
+            data-sizes="auto"
+            alt="{{ $prevPost.Title }}"
+            class="lazyload"
+          />
+        {{- else -}}
+          {{- $cover := index (shuffle $authorCovers) 0 -}}
+          {{- if $cover -}}
+            <img
+              data-src="{{ $cover | relURL }}"
+              data-sizes="auto"
+              alt="{{ $prevPost.Title }}"
+              class="lazyload"
+            />
+          {{- else -}}
+            <img
+              data-src="{{ $.Site.Params.banner | relURL }}"
+              data-sizes="auto"
+              alt="{{ $prevPost.Title }}"
+              class="lazyload"
+            />
+          {{- end -}}
+        {{- end -}}
+        <a
+          href="{{ $prevPost.Permalink | relURL }}"
+          aria-label="{{ i18n "newer" }}: {{- if $prevPost.Title -}}
+            {{- $prevPost.Title -}}
+          {{- else -}}
+            (no title)
+          {{- end -}}"
+          title="{{ i18n "newer" }}: {{- if $prevPost.Title -}}
+            {{- $prevPost.Title -}}
+          {{- else -}}
+            (no title)
+          {{- end -}}"
+        ></a>
+        <div class="article-nav-caption">{{ i18n "newer" }}</div>
+        <h3 class="article-nav-title">
+          {{- if $prevPost.Title -}}
+            {{- $prevPost.Title -}}
+          {{- else -}}
+            (no title)
+          {{- end -}}
+        </h3>
+      </div>
+    {{- end -}}
+
+    {{- if $nextPost -}}
+      <div class="article-nav-link-wrap right">
+        {{- if and $nextPost.Params.cover (not (strings.HasPrefix $nextPost.Params.cover "rgb")) -}}
+          <img
+            data-src="{{ $nextPost.Params.cover | relURL }}"
+            data-sizes="auto"
+            alt="{{ $nextPost.Title }}"
+            class="lazyload"
+          />
+        {{- else -}}
+          {{- $cover := index (shuffle $authorCovers) 0 -}}
+          {{- if $cover -}}
+            <img
+              data-src="{{ $cover | relURL }}"
+              data-sizes="auto"
+              alt="{{ $nextPost.Title }}"
+              class="lazyload"
+            />
+          {{- else -}}
+            <img
+              data-src="{{ $.Site.Params.banner | relURL }}"
+              data-sizes="auto"
+              alt="{{ $nextPost.Title }}"
+              class="lazyload"
+            />
+          {{- end -}}
+        {{- end -}}
+        <a
+          href="{{ $nextPost.Permalink | relURL }}"
+          aria-label="{{ i18n "older" }}: {{- if $nextPost.Title -}}
+            {{- $nextPost.Title -}}
+          {{- else -}}
+            (no title)
+          {{- end -}}"
+          title="{{ i18n "older" }}: {{- if $nextPost.Title -}}
+            {{- $nextPost.Title -}}
+          {{- else -}}
+            (no title)
+          {{- end -}}"
+        ></a>
+        <div class="article-nav-caption">{{ i18n "older" }}</div>
+        <h3 class="article-nav-title">
+          {{- if $nextPost.Title -}}
+            {{- $nextPost.Title -}}
+          {{- else -}}
+            (no title)
+          {{- end -}}
+        </h3>
+      </div>
+    {{- end -}}
+  </nav>
+{{- end -}}

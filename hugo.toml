@@ -1,0 +1,27 @@
+baseURL = 'https://cxywh.github.io/'
+languageCode = 'zh-CN'
+title = '罗辑 & 妹妹'
+theme = 'reimu'
+defaultContentLanguage = 'zh-CN'
+
+[languages]
+[languages.zh-CN]
+languageName = '简体中文'
+weight = 1
+hasCJKLanguage = true
+
+[params]
+  author = '罗辑'
+  description = '记录罗辑和妹妹的生活点滴'
+
+[markup.highlight]
+guessSyntax = true
+noClasses = false
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[markup.goldmark.extensions.passthrough]
+enable = true
+delimiters.block = [["$$", "$$"], ["\\[", "\\]"]]
+delimiters.inline = [["$", "$"], ["\\(", "\\)"]]

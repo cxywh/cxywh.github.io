@@ -1,0 +1,43 @@
+{{- if len .Site.Taxonomies.tags -}}
+  {{- $site := .Site -}}
+  {{- $params := .Site.Params -}}
+  {{- $limit := $params.tag_limits -}}
+  {{- range $authorKey := slice "luoji" "meimei" -}}
+  <div class="widget-wrapper author-widget" data-author="{{ $authorKey }}" {{ if eq $authorKey "meimei" }}style="display:none"{{ end }}>
+    <div
+      class="widget-wrap"
+      data-aos="{{ $.Site.Params.animation.options.home.widget }}"
+    >
+      <div style="display: flex; justify-content: space-between;">
+        <h3 class="widget-title">{{ i18n "tags" }}</h3>
+        {{- if gt (len $site.Taxonomies.tags) $limit -}}
+          <a class="widget-link" href="{{ "tags/" | relLangURL }}">{{ i18n "more" }}</a>
+        {{- end -}}
+      </div>
+      <div class="widget">
+        <ul class="tag-list" itemprop="keywords">
+          {{- $counter := 0 -}}
+          {{- range $site.Taxonomies.tags -}}
+            {{- if lt $counter $limit -}}
+              {{- $tagPages := where .Pages "Params.author" $authorKey -}}
+              {{- if gt (len $tagPages) 0 -}}
+              <li class="tag-item">
+                  <a
+                    class="tag-link"
+                    href="{{ .Page.RelPermalink }}"
+                    aria-label="{{ i18n "tag" }}: {{ .Page.Title }}"
+                    title="{{ .Page.Title }}"
+                  >
+                    {{ .Page.Title }}
+                  </a>
+                </li>
+              {{- $counter = add $counter 1 -}}
+              {{- end -}}
+            {{- end -}}
+          {{- end -}}
+        </ul>
+      </div>
+    </div>
+  </div>
+  {{- end -}}
+{{- end -}}

@@ -1,0 +1,40 @@
+<div class="tag-wrap">
+  {{- /* 罗辑的标签 */ -}}
+  {{- range $.Site.Taxonomies.tags -}}
+    {{- $authorPages := where .Pages "Params.author" "luoji" -}}
+    {{- if gt (len $authorPages) 0 -}}
+      <div class="archives-tag-list-item archives-tag-luoji" data-author="luoji" data-aos="{{ $.Site.Params.animation.options.archive.tag }}">
+        <a class="archives-tag-list-link" href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a>
+      </div>
+    {{- end -}}
+  {{- end -}}
+  {{- /* 妹妹的标签（默认隐藏） */ -}}
+  {{- range $.Site.Taxonomies.tags -}}
+    {{- $authorPages := where .Pages "Params.author" "meimei" -}}
+    {{- if gt (len $authorPages) 0 -}}
+      <div class="archives-tag-list-item archives-tag-meimei" data-author="meimei" data-aos="{{ $.Site.Params.animation.options.archive.tag }}" style="display:none">
+        <a class="archives-tag-list-link" href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a>
+      </div>
+    {{- end -}}
+  {{- end -}}
+</div>
+<div class="category-wrap">
+  {{- /* 罗辑的分类 */ -}}
+  {{- range $.Site.Taxonomies.categories -}}
+    {{- $authorPages := where .Pages "Params.author" "luoji" -}}
+    {{- if gt (len $authorPages) 0 -}}
+      <div class="archives-category-list-item archives-category-luoji" data-author="luoji" data-aos="{{ $.Site.Params.animation.options.archive.category }}">
+        <a class="archives-category-list-link" href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a>
+      </div>
+    {{- end -}}
+  {{- end -}}
+  {{- /* 妹妹的分类（默认隐藏） */ -}}
+  {{- range $.Site.Taxonomies.categories -}}
+    {{- $authorPages := where .Pages "Params.author" "meimei" -}}
+    {{- if gt (len $authorPages) 0 -}}
+      <div class="archives-category-list-item archives-category-meimei" data-author="meimei" data-aos="{{ $.Site.Params.animation.options.archive.category }}" style="display:none">
+        <a class="archives-category-list-link" href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a>
+      </div>
+    {{- end -}}
+  {{- end -}}
+</div>
