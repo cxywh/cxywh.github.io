@@ -1,6 +1,9 @@
 # Cloudflare Pages / Netlify 读取的响应头配置（GitHub Pages 会忽略本文件，无副作用）
 
 # 站点级安全头
+#
+# CSP 里的 'unsafe-inline' 是必需的，别"顺手加固"掉：主题 head 里有 5 段内联
+# <script> 和 4 个 onload= 属性，去掉会直接打坏页面。
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
@@ -8,12 +11,22 @@
   X-Frame-Options: DENY
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://npm.webcache.cn https://at.alicdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://at.alicdn.com https://npm.webcache.cn; font-src 'self' https://fonts.gstatic.com https://at.alicdn.com data:; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
-# 指纹化资源（Hugo 产物名中带 sha256），内容一变文件名就变，可以永久缓存。
-# 注意：CSP 里的 'unsafe-inline' 是必需的 —— 主题 head 里有 5 段内联 <script> 和 4 个 onload= 属性，
-# 去掉会直接打坏页面。这里不假装严格。
-/*.min.*.css
+# 指纹化资源（Hugo 产物名里带 sha256），内容一变文件名就变，可以永久缓存。
+#
+# 坑：Cloudflare 的 _headers 规则**只能有一个 `*`**（官方原文："You may only
+# include a single splat in the URL"）。写成 `/*.min.*.css` 这种两个 `*` 的规则
+# 会被**静默忽略**——不报错、也不生效，拿到的还是默认的 max-age=0, must-revalidate。
+# 所以这里按目录前缀写，不用中缀通配。
+#
+# /css/ 下只有 Hugo Pipes 产出的指纹文件（author-switch、main），整目录长缓存安全。
+/css/*
   Cache-Control: public, max-age=31536000, immutable
-/*.min.*.js
+
+# /js/ 下混着主题自带的非指纹文件（main.js / aos.js / pjax_main.js / tabs.js /
+# insert_highlight.js），整目录长缓存会把它们一起钉住、以后改了不生效。
+# 所以只匹配带指纹的那条。:stem / :hash 是 _headers 的占位符，路径里以 `/` 为
+# 分隔符，可以跨点号匹配。
+/js/:stem.min.:hash.js
   Cache-Control: public, max-age=31536000, immutable
 
 # 图片和字体长期缓存
