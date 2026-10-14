@@ -15,7 +15,7 @@
   <section class="archives-wrap" data-aos="{{ $ctx.Site.Params.animation.options.archive.section }}">
     <ul>
       {{- range $paginator -}}
-        {{- $author := .Params.author | default "luoji" -}}
+        {{- $author := .Params.author | default site.Data.authors.default -}}
         <li class="archive-article" data-author="{{ $author }}">
           <div class="archive-article-date">
             <span>
@@ -53,7 +53,7 @@
     </div>
     <ul>
       {{- range .Pages -}}
-        {{- $author := .Params.author | default "luoji" -}}
+        {{- $author := .Params.author | default site.Data.authors.default -}}
         <li class="archive-article" data-author="{{ $author }}">
           <div class="archive-article-date">
             <span>

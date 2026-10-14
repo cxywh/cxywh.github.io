@@ -3,9 +3,10 @@
   {{- $params := .Site.Params -}}
   {{- $mainSections := $params.mainSections -}}
   {{- $limit := $params.recent_posts_limits -}}
-  {{- range $authorKey := slice "luoji" "meimei" -}}
+  {{- $authorBook := $site.Data.authors -}}
+  {{- range $authorKey, $a := $authorBook.authors -}}
   {{- $authorPosts := where (where $site.RegularPages "Section" "in" $mainSections) "Params.author" $authorKey | first $limit -}}
-  <div class="widget-wrapper author-widget" data-author="{{ $authorKey }}" {{ if eq $authorKey "meimei" }}style="display:none"{{ end }}>
+  <div class="widget-wrapper author-widget" data-author="{{ $authorKey }}" {{ if ne $authorKey $authorBook.default }}style="display:none"{{ end }}>
     <div
       class="widget-wrap"
       data-aos="{{ $.Site.Params.animation.options.home.widget }}"

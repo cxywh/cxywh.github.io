@@ -1,0 +1,33 @@
+# Cloudflare Pages / Netlify 读取的响应头配置（GitHub Pages 会忽略本文件，无副作用）
+
+# 站点级安全头
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://npm.webcache.cn https://at.alicdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://at.alicdn.com https://npm.webcache.cn; font-src 'self' https://fonts.gstatic.com https://at.alicdn.com data:; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+
+# 指纹化资源（Hugo 产物名中带 sha256），内容一变文件名就变，可以永久缓存。
+# 注意：CSP 里的 'unsafe-inline' 是必需的 —— 主题 head 里有 5 段内联 <script> 和 4 个 onload= 属性，
+# 去掉会直接打坏页面。这里不假装严格。
+/*.min.*.css
+  Cache-Control: public, max-age=31536000, immutable
+/*.min.*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+# 图片和字体长期缓存
+/images/*
+  Cache-Control: public, max-age=604800
+/avatar/*
+  Cache-Control: public, max-age=604800
+
+# HTML 每次校验，保证内容更新立刻生效
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+# RSS 读起来方便
+/index.xml
+  Content-Type: application/rss+xml; charset=utf-8

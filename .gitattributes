@@ -1,0 +1,39 @@
+# 统一行尾。
+#
+# 背景：本机 core.autocrlf=true，检出时会把文本文件转成 CRLF。
+# 而构建发生在 Linux（Cloudflare Pages 构建机）上，脚本一旦带 CRLF，
+# `bash scripts/build.sh` 会因为行尾的 \r 报 "command not found"，且报错信息具有误导性。
+# 所以这里显式钉死：文本一律 LF，二进制原样。
+#
+# 改完这个文件后需要跑一次 `git add --renormalize .` 让索引跟着更新。
+
+# 脚本必须 LF —— 这条是硬性要求，不是风格偏好
+*.sh    text eol=lf
+*.bash  text eol=lf
+
+# 文本文件统一 LF，避免两边来回检出时整文件 diff
+*.js    text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+*.md    text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.toml  text eol=lf
+*.json  text eol=lf
+*.txt   text eol=lf
+*.xml   text eol=lf
+*.svg   text eol=lf
+
+# 图片等二进制资源不要做任何转换
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.webp  binary
+*.gif   binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+
+# 第三方主题是 vendored 进来的，不做任何行尾转换，保持上游原样。
+# 否则会凭空产生上千行"只改了行尾"的 diff，污染提交、也难以和上游比对。
+themes/** -text

@@ -1,10 +1,15 @@
 {{- if len .Site.Taxonomies.categories -}}
   {{- $site := .Site -}}
   {{- $params := .Site.Params -}}
-  {{- $mainSections := $params.mainSections -}}
   {{- $limit := $params.category_limits -}}
-  {{- range $authorKey := slice "luoji" "meimei" -}}
-  <div class="widget-wrapper author-widget" data-author="{{ $authorKey }}" {{ if eq $authorKey "meimei" }}style="display:none"{{ end }}>
+  {{- $authors := $site.Data.authors -}}
+  {{- /* 每位作者一份分类挂件，由前端脚本按当前作者显示 */ -}}
+  {{- range $authorKey, $a := $authors.authors -}}
+  <div
+    class="widget-wrapper author-widget"
+    data-author="{{ $authorKey }}"
+    {{ if ne $authorKey $authors.default }}style="display:none"{{ end }}
+  >
     <div
       class="widget-wrap"
       data-aos="{{ $.Site.Params.animation.options.home.widget }}"
@@ -23,7 +28,7 @@
               {{- $catPages := where .Pages "Params.author" $authorKey -}}
               {{- if gt (len $catPages) 0 -}}
               <li class="category-list-item">
-                <a class="category-list-link" href="{{ .Page.RelPermalink }}" 
+                <a class="category-list-link" href="{{ .Page.RelPermalink }}"
                   title="{{ .Page.Title }}"
                   >{{ .Page.Title }}</a
                 >

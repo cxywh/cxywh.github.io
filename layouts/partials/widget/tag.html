@@ -2,8 +2,9 @@
   {{- $site := .Site -}}
   {{- $params := .Site.Params -}}
   {{- $limit := $params.tag_limits -}}
-  {{- range $authorKey := slice "luoji" "meimei" -}}
-  <div class="widget-wrapper author-widget" data-author="{{ $authorKey }}" {{ if eq $authorKey "meimei" }}style="display:none"{{ end }}>
+  {{- $authorBook := $site.Data.authors -}}
+  {{- range $authorKey, $a := $authorBook.authors -}}
+  <div class="widget-wrapper author-widget" data-author="{{ $authorKey }}" {{ if ne $authorKey $authorBook.default }}style="display:none"{{ end }}>
     <div
       class="widget-wrap"
       data-aos="{{ $.Site.Params.animation.options.home.widget }}"

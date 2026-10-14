@@ -1,0 +1,103 @@
+# ============================================================
+#  作者唯一数据源
+# ============================================================
+#  这个文件是「罗辑 / 妹妹」两位作者的全部元数据。
+#
+#  加一位新作者要动的地方：
+#    1. 在下面 authors: 里加一块（复制一份改掉即可）
+#    2. 没了。
+#
+#  模板会据此自动生成：侧边栏切换按钮与圆点颜色、侧边栏文章/分类/标签统计、
+#  首页与文章页的作者标签、封面池。前端脚本从 window.__BLOG_AUTHORS__ 读取，
+#  同样不需要改代码。
+#
+#  唯一需要人工保持一致的是 key 本身：它必须和文章 front matter 里的
+#  author: 字段一致（例如 author: meimei）。
+# ============================================================
+
+# 文章没有写 author 字段时，默认归给谁
+default: luoji
+
+authors:
+  luoji:
+    name: 罗辑
+    # 首页大标题
+    title: 罗辑的博客
+    # 副标题文字；留空则用 params.yml 的 subtitle
+    subtitle: 记录一些日常
+    # 侧边栏头像（相对 static/avatar/）
+    avatar: 01.webp
+    # 顶部头图
+    banner: /images/banner-luoji.webp
+    # 主题主色：切换作者时整站的强调色跟着换
+    color: "#4a90d9"
+    # 光标样式：default = 不启用灵梦自定义光标
+    cursor: default
+    # 首页/副标题的备注文字（罗辑这边对应 Rick and Morty 梗）
+    # 键是页面路径，'' 表示首页
+    page_subtitles:
+      "": "Rick:Hey...hey,morty,press...press...uh..up,up,down,down!"
+      /archives: "Morty:Ri...rick? A..are you ok?"
+      /about: "Rick:Do it! morty! just do it!"
+      /friend: "Morty:Ok...rick..ok.."
+    # 切换作者时写入 :root 的 CSS 变量。
+    # 加新作者时，把这 13 个变量换成新配色即可。
+    theme_vars:
+      "--author-color": "#4a90d9"
+      "--red-0": "#4a90d9"
+      "--red-1": "#4a90d9"
+      "--red-2": "#4a90d9"
+      "--red-3": "#4a90d9"
+      "--red-4": "#d6e4f5"
+      "--red-5": "#d6e4f5"
+      "--red-5-5": "#e8f0fa"
+      "--color-link": "#4a90d9"
+      "--color-link-hover": "#4a90d9"
+      "--color-h2-after": "#4a90d9"
+      "--color-red-6-shadow": "rgba(74, 144, 217, 0.6)"
+      "--color-red-3-shadow": "rgba(74, 144, 217, 0.3)"
+    # 文章封面池，每篇没写 cover 的文章从这里随机取一张
+    covers:
+      - /images/00.webp
+      - /images/01.webp
+      - /images/1.webp
+      - /images/2.webp
+      - /images/3.webp
+      - /images/4.webp
+      - /images/5.webp
+
+  meimei:
+    name: 妹妹
+    title: 妹妹的小世界
+    subtitle: ""          # 妹妹用图片当副标题，见下面的 subtitle_images
+    # 不同页面用不同的副标题图；key 是页面标识
+    subtitle_images:
+      - { src: /images/shouye.png,  page: home }
+      - { src: /images/guidang.png, page: archives }
+      - { src: /images/guanyu.png,  page: about }
+      - { src: /images/youlian.png, page: friend }
+    avatar: meimei.webp
+    banner: /images/banner.webp   # 注意：这张图目前还不存在，切到妹妹时会沿用罗辑的头图
+    color: "#e87d9e"
+    cursor: reimu
+    page_subtitles: {}
+    theme_vars:
+      "--author-color": "#e87d9e"
+      "--red-0": "#e87d9e"
+      "--red-1": "#e87d9e"
+      "--red-2": "#e87d9e"
+      "--red-3": "#e87d9e"
+      "--red-4": "#fce4ec"
+      "--red-5": "#fce4ec"
+      "--red-5-5": "#fdf0f4"
+      "--color-link": "#e87d9e"
+      "--color-link-hover": "#e87d9e"
+      "--color-h2-after": "#e87d9e"
+      "--color-red-6-shadow": "rgba(232, 125, 158, 0.6)"
+      "--color-red-3-shadow": "rgba(232, 125, 158, 0.3)"
+    covers:
+      - /images/21.webp
+      - /images/22.webp
+      - /images/23.webp
+      - /images/24.webp
+      - /images/26.webp

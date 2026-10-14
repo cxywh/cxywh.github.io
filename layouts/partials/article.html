@@ -1,4 +1,4 @@
-{{- $author := .Params.author | default "luoji" -}}
+{{- $author := .Params.author | default site.Data.authors.default -}}
 <article
   class="h-entry article"
   itemscope

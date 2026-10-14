@@ -1,7 +1,7 @@
 {{- $page := .page -}}
 {{- $index := .index -}}
 {{- $ctx := .ctx -}}
-{{- $author := .author | default ($page.Params.author | default "luoji") -}}
+{{- $author := .author | default ($page.Params.author | default site.Data.authors.default) -}}
 
 <div class="post-wrapper" data-author="{{ $author }}">
   <div
@@ -50,14 +50,11 @@
           class="lazyload"
         />
       {{- else -}}
-        {{- /* 按作者选择封面池 */ -}}
-        {{- $coversKey := "covers" -}}
-        {{- if eq $author "luoji" -}}
-          {{- $coversKey = "covers-luoji" -}}
-        {{- else if eq $author "meimei" -}}
-          {{- $coversKey = "covers-meimei" -}}
+        {{- /* 封面池来自 data/authors.yml；作者没配就退回全站默认封面 covers.yml */ -}}
+        {{- $coverList := site.Data.covers -}}
+        {{- with index site.Data.authors.authors $author -}}
+          {{- with .covers -}}{{- $coverList = . -}}{{- end -}}
         {{- end -}}
-        {{- $coverList := index $ctx.Site.Data $coversKey -}}
         {{- $cover := index (shuffle $coverList) 0 -}}
         {{- if $cover -}}
           <img
@@ -105,7 +102,7 @@
             background: var(--author-color, var(--red-1, #ff5252));
             color: #fff;
           ">
-            {{- if eq $author "luoji" -}}罗辑{{- else -}}妹妹{{- end -}}
+            {{- with index site.Data.authors.authors $author -}}{{ .name }}{{- else -}}{{ $author }}{{- end -}}
           </span>
         {{- end -}}
       </div>

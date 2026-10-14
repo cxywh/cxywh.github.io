@@ -1,4 +1,4 @@
-baseURL = 'https://cxywh.github.io/'
+baseURL = 'https://blog.cxywh.cn/'
 languageCode = 'zh-CN'
 title = '罗辑 & 妹妹'
 theme = 'reimu'

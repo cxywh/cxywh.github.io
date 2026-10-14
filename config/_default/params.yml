@@ -26,9 +26,9 @@ monthFormat: "2006-01"
 dateFormat: "2006-01-02"
 timeFormat: "2006-01-02 15:04:05"
 
-author: D-Sketon
-email: xxx@example.com
-description: "少女祈祷中..."
+author: 罗辑
+email: me@cxywh.cn
+description: "记录罗辑和妹妹的生活点滴"
 # subtitle: "少女祈祷中..."
 subtitle:
   typing:
@@ -49,7 +49,7 @@ subtitle:
     smartBackspace: false       # 智能退格，只删除不同的部分
   text: "少女祈祷中..."        # 当 typing.enable = false 时使用
 
-banner: "/images/banner-luoji.svg"
+banner: "/images/banner-luoji.webp"
 # You can also write it in the form of the following url
 # banner: "https://example.com"
 
@@ -105,7 +105,7 @@ footer:
   since: 2020 # 2020-current year
   powered: true
   count: true
-  busuanzi: true
+  busuanzi: false # 不蒜子是公共计数器（各家站点共享一个总数），既不是本站真实数据，又多一个第三方请求
   icon:
     url: "../images/taichi.png" # this path is relative to the css/main.css, so it needs to go up one level to reach the images folder
     rotate: true
@@ -120,8 +120,8 @@ sidebar:
     show_common: true # whether to show common sidebar, ignored on mobile devices
 
 social:
-  # email: mailto:xxx@gmail.com
-  # github: https://github.com/yourname
+  email: mailto:me@cxywh.cn
+  github: https://github.com/cxywh
   # google: https://plus.google.com/yourname
   # twitter: https://twitter.com/yourname
   # bluesky: https://bsky.app/profile/yourname
@@ -307,7 +307,9 @@ clipboard:
 
 math:
   katex:
-    enable: true
+    # 站内没有任何公式内容。开着会让每个页面都多加载 katex.min.js(277KB)+CSS，
+    # 真要用公式时再改回 true。
+    enable: false
   mathjax:
     enable: false
     options: # see https://docs.mathjax.org/en/latest/web/configuration.html
@@ -510,7 +512,7 @@ animation:
 # see https://github.com/D-Sketon/mouse-firework
 firework:
   enable: true
-  disable_on_mobile: false
+  disable_on_mobile: true # 手机上每次点击都跑粒子系统，纯耗电
   options:
     excludeElements: ["a", "button"]
     particles:

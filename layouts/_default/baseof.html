@@ -22,9 +22,20 @@
     {{- if .Site.Params.injector.body_begin -}}
       {{- .Site.Params.injector.body_begin | safeHTML -}}
     {{- end -}}
-    <!-- Author Switch CSS -->
-    {{- $authorSwitchCSS := resources.Get "css/author-switch.css" | default (dict "Permalink" "/css/author-switch.css") -}}
-    <link rel="stylesheet" href="/css/author-switch.css">
+    {{- /* 作者元数据的唯一来源：data/authors.yml。模板与前端脚本共用这一份。 */ -}}
+    {{- with site.Data.authors -}}
+      <script>window.__BLOG_AUTHORS__ = {{ . | jsonify | safeJS }};</script>
+    {{- end -}}
+    <!-- Author Switch 样式：走 Hugo Pipes，压缩 + 指纹，可长缓存。
+         故意不加 integrity / crossorigin：
+         ① 同源资源被指纹保护已足够，文件名带哈希本身就是缓存失效的保证；
+         ② 一旦机器上开了代理（本机 7890 会拦 localhost）或装了改写流量的工具，
+            字节被改一下 SRI 就对不上，浏览器会静默丢掉整个样式表 —— 页面直接裸奔。
+            这个失败模式排查起来极难，收益又极小，所以不加。 -->
+    {{- with resources.Get "css/author-switch.css" -}}
+      {{- $css := . | minify | fingerprint "sha256" -}}
+      <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+    {{- end -}}
     <div id="container">
       <div id="wrap">
         {{- partial "header.html" . -}}
@@ -98,7 +109,10 @@
     {{- if .Site.Params.injector.body_end -}}
       {{- .Site.Params.injector.body_end | safeHTML -}}
     {{- end -}}
-    <!-- Author Switch JS -->
-    <script src="/js/author-switch.js"></script>
+    <!-- Author Switch 脚本：同上，压缩 + 指纹；同样不加 integrity / crossorigin -->
+    {{- with resources.Get "js/author-switch.js" -}}
+      {{- $js := . | minify | fingerprint "sha256" -}}
+      <script src="{{ $js.RelPermalink }}" defer></script>
+    {{- end -}}
   </body>
 </html>

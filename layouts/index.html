@@ -69,7 +69,7 @@
     {{- end -}}
   {{- else if eq $sort_config "default" -}}
     {{- range $k, $v := $paginator.Pages -}}
-      {{- $author := $v.Params.author | default "luoji" -}}
+      {{- $author := $v.Params.author | default site.Data.authors.default -}}
       {{- partial "post.html"  (dict "index" $k "ctx" . "page" $v "author" $author) -}}
     {{- end -}}
   {{- end -}}

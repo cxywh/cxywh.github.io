@@ -1,13 +1,10 @@
-{{- $currentAuthor := .Params.author | default "luoji" -}}
+{{- $currentAuthor := .Params.author | default site.Data.authors.default -}}
 {{- $allPosts := where (where .Site.RegularPages "Section" "in" .Site.Params.mainSections) "Params.author" $currentAuthor -}}
-{{- /* 按作者选封面池 */ -}}
-{{- $authorCoversKey := "covers" -}}
-{{- if eq $currentAuthor "luoji" -}}
-  {{- $authorCoversKey = "covers-luoji" -}}
-{{- else if eq $currentAuthor "meimei" -}}
-  {{- $authorCoversKey = "covers-meimei" -}}
+{{- /* 封面池来自 data/authors.yml，作者没配就退回全站默认 covers.yml */ -}}
+{{- $authorCovers := site.Data.covers -}}
+{{- with index site.Data.authors.authors $currentAuthor -}}
+  {{- with .covers -}}{{- $authorCovers = . -}}{{- end -}}
 {{- end -}}
-{{- $authorCovers := index .Site.Data $authorCoversKey -}}
 {{- $sortedPosts := sort $allPosts "Date" "asc" -}}
 
 {{- $prevPost := false -}}

@@ -5,6 +5,12 @@
 {{- if and (reflect.IsMap $params.sidebar) (isset $params.sidebar "menu") -}}
   {{- $showMenu = $params.sidebar.menu -}}
 {{- end -}}
+{{- $site := .ctx.Page.Site -}}
+{{- $authors := $site.Data.authors -}}
+{{- $authorMap := $authors.authors -}}
+{{- $defaultAuthor := $authors.default -}}
+{{- $allPosts := (where $site.RegularPages "Section" "in" $params.mainSections) -}}
+
 <div class="sidebar-author">
   <img
     data-src="{{ "avatar/" | relURL }}{{ $params.avatar }}"
@@ -14,86 +20,56 @@
   />
   <div class="sidebar-author-name-row">
     <div class="sidebar-author-name">{{ $params.author }}</div>
+    {{- /* 切换按钮由 data/authors.yml 生成：加作者不用动这里 */ -}}
     <div class="author-switch-sidebar">
-      <button class="author-switch-btn" data-author="luoji" title="切换到罗辑">
-        <span class="author-switch-dot" style="background:#4a90d9"></span>
+      {{- range $key, $a := $authorMap }}
+      <button class="author-switch-btn" data-author="{{ $key }}" title="切换到{{ $a.name }}">
+        <span class="author-switch-dot" style="background:{{ $a.color }}"></span>
       </button>
-      <button class="author-switch-btn" data-author="meimei" title="切换到妹妹">
-        <span class="author-switch-dot" style="background:#e87d9e"></span>
-      </button>
+      {{- end }}
     </div>
   </div>
   <div class="sidebar-description">{{ $params.description }}</div>
 </div>
-{{- $allPosts := (where .ctx.Page.Site.RegularPages "Section" "in" $params.mainSections) -}}
-{{- $luojiPosts := where $allPosts "Params.author" "luoji" -}}
-{{- $meimeiPosts := where $allPosts "Params.author" "meimei" -}}
 
-{{- /* 按作者统计分类数量 */ -}}
-{{- $luojiCats := slice -}}
-{{- $meimeiCats := slice -}}
-{{- range .ctx.Site.Taxonomies.categories -}}
-  {{- range where .Pages "Params.author" "luoji" -}}{{- $luojiCats = $luojiCats | append .Params.categories -}}{{- end -}}
-  {{- range where .Pages "Params.author" "meimei" -}}{{- $meimeiCats = $meimeiCats | append .Params.categories -}}{{- end -}}
-{{- end -}}
-{{- $luojiCats = $luojiCats | uniq -}}
-{{- $meimeiCats = $meimeiCats | uniq -}}
-
-{{- /* 按作者统计标签数量 */ -}}
-{{- $luojiTags := slice -}}
-{{- $meimeiTags := slice -}}
-{{- range .ctx.Site.Taxonomies.tags -}}
-  {{- range where .Pages "Params.author" "luoji" -}}{{- $luojiTags = $luojiTags | append .Params.tags -}}{{- end -}}
-  {{- range where .Pages "Params.author" "meimei" -}}{{- $meimeiTags = $meimeiTags | append .Params.tags -}}{{- end -}}
-{{- end -}}
-{{- $luojiTags = $luojiTags | uniq -}}
-{{- $meimeiTags = $meimeiTags | uniq -}}
-
+{{- /* 按作者统计文章 / 分类 / 标签数量。
+       原来罗辑和妹妹各写一遍（四段几乎相同的代码），加第三位作者还得再抄两段。
+       现在遍历 authors.yml，多少位作者都只有这一段。 */ -}}
 <div class="sidebar-state">
-  {{- /* 罗辑的数据 - 新排版 */ -}}
-  <div class="author-state" data-author="luoji">
+  {{- range $key, $a := $authorMap }}
+    {{- $posts := where $allPosts "Params.author" $key -}}
+    {{- $cats := slice -}}
+    {{- $tags := slice -}}
+    {{- range $site.Taxonomies.categories -}}
+      {{- range where .Pages "Params.author" $key -}}{{- $cats = $cats | append .Params.categories -}}{{- end -}}
+    {{- end -}}
+    {{- range $site.Taxonomies.tags -}}
+      {{- range where .Pages "Params.author" $key -}}{{- $tags = $tags | append .Params.tags -}}{{- end -}}
+    {{- end -}}
+    {{- $cats = $cats | uniq -}}
+    {{- $tags = $tags | uniq -}}
+  <div class="author-state" data-author="{{ $key }}"{{ if ne $key $defaultAuthor }} style="display:none"{{ end }}>
     <div class="author-state-row">
       <div class="author-state-item">
         <span class="author-state-label">{{ i18n "sidebar.post" }}</span>
-        <span class="author-state-number">{{ len $luojiPosts }}</span>
+        <span class="author-state-number">{{ len $posts }}</span>
       </div>
       <div class="author-state-item">
         <a href="{{ "categories/" | relLangURL }}" aria-label="sidebar-state-category-link">
           <span class="author-state-label">{{ i18n "sidebar.category" }}</span>
-          <span class="author-state-number">{{ len $luojiCats }}</span>
+          <span class="author-state-number">{{ len $cats }}</span>
         </a>
       </div>
       <div class="author-state-item">
         <a href="{{ "tags/" | relLangURL }}" aria-label="sidebar-state-tag-link">
           <span class="author-state-label">{{ i18n "sidebar.tag" }}</span>
-          <span class="author-state-number">{{ len $luojiTags }}</span>
+          <span class="author-state-number">{{ len $tags }}</span>
         </a>
       </div>
     </div>
     <div class="author-state-divider"></div>
   </div>
-  {{- /* 妹妹的数据 - 新排版 */ -}}
-  <div class="author-state" data-author="meimei" style="display:none">
-    <div class="author-state-row">
-      <div class="author-state-item">
-        <span class="author-state-label">{{ i18n "sidebar.post" }}</span>
-        <span class="author-state-number">{{ len $meimeiPosts }}</span>
-      </div>
-      <div class="author-state-item">
-        <a href="{{ "categories/" | relLangURL }}" aria-label="sidebar-state-category-link">
-          <span class="author-state-label">{{ i18n "sidebar.category" }}</span>
-          <span class="author-state-number">{{ len $meimeiCats }}</span>
-        </a>
-      </div>
-      <div class="author-state-item">
-        <a href="{{ "tags/" | relLangURL }}" aria-label="sidebar-state-tag-link">
-          <span class="author-state-label">{{ i18n "sidebar.tag" }}</span>
-          <span class="author-state-number">{{ len $meimeiTags }}</span>
-        </a>
-      </div>
-    </div>
-    <div class="author-state-divider"></div>
-  </div>
+  {{- end }}
 </div>
 <div class="sidebar-social" {{ if not (or $showMenu $mobile) }}style="margin-bottom: 20px;"{{ end }}>
   {{- if reflect.IsSlice $params.social -}}

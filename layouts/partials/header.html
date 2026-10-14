@@ -182,13 +182,13 @@
       {{- else -}}
         {{- $title := "" -}}
         {{- if .IsHome -}}
-          {{- /* 输出双标题，JS 控制显示 */ -}}
-          <span id="logo" class="author-title" data-author="luoji">
-            <h1 data-aos="{{ .Site.Params.animation.options.header.title }}">罗辑的博客</h1>
+          {{- /* 每位作者一个首页标题，由前端脚本按当前作者显示。加作者只改 authors.yml。 */ -}}
+          {{- $authorBook := site.Data.authors -}}
+          {{- range $key, $a := $authorBook.authors }}
+          <span id="logo" class="author-title" data-author="{{ $key }}"{{ if ne $key $authorBook.default }} style="display:none;"{{ end }}>
+            <h1 data-aos="{{ $.Site.Params.animation.options.header.title }}">{{ $a.title }}</h1>
           </span>
-          <span id="logo" class="author-title" data-author="meimei" style="display:none;">
-            <h1 data-aos="{{ .Site.Params.animation.options.header.title }}">妹妹的小世界</h1>
-          </span>
+          {{- end }}
         {{- else if eq .Type "archives" -}}
           {{- $title = i18n "archive_a" -}}
         {{- else if eq .Type "tags" -}}
@@ -224,15 +224,21 @@
           {{- if $useTyping -}}
             <span id="subtitle"><span></span></span>
           {{- else -}}
-            {{- /* 罗辑副标题 */ -}}
-            <span id="subtitle" class="author-subtitle" data-author="luoji">{{ "记录一些日常" | safeHTML }}</span>
-            {{- /* 妹妹副标题 - 各页面不同图片 */ -}}
-            <span id="subtitle-meimei" class="author-subtitle meimei-subtitle-wrapper" data-author="meimei" style="display:none;">
-              <img src="/images/shouye.png" class="meimei-subtitle-img" data-page="home" alt="">
-              <img src="/images/guidang.png" class="meimei-subtitle-img" data-page="archives" alt="" style="display:none;">
-              <img src="/images/guanyu.png" class="meimei-subtitle-img" data-page="about" alt="" style="display:none;">
-              <img src="/images/youlian.png" class="meimei-subtitle-img" data-page="friend" alt="" style="display:none;">
+            {{- /* 副标题同样由数据生成：
+                 配了 subtitle 的输出文字，配了 subtitle_images 的输出图片组。 */ -}}
+            {{- $authorBook := site.Data.authors -}}
+            {{- range $key, $a := $authorBook.authors }}
+              {{- $hidden := ne $key $authorBook.default -}}
+              {{- if $a.subtitle }}
+            <span id="subtitle" class="author-subtitle" data-author="{{ $key }}"{{ if $hidden }} style="display:none;"{{ end }}>{{ $a.subtitle | safeHTML }}</span>
+              {{- else if $a.subtitle_images }}
+            <span id="subtitle-{{ $key }}" class="author-subtitle subtitle-image-wrapper" data-author="{{ $key }}"{{ if $hidden }} style="display:none;"{{ end }}>
+                {{- range $a.subtitle_images }}
+              <img src="{{ .src }}" class="subtitle-img" data-page="{{ .page }}" alt="">
+                {{- end }}
             </span>
+              {{- end }}
+            {{- end }}
           {{- end -}}
         </h2>
       {{- end -}}

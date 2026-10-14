@@ -1,0 +1,41 @@
+{{- /*
+  站点覆写 —— 原文件: themes/reimu/layouts/partials/helpers/cdnCss.html
+
+  为什么要覆写：
+  上游 head.html 第 137 行【无条件】加载 katex 的 CSS，没有跟随
+  math.katex.enable 开关；而 afterFooter.html 里加载 katex 的 JS 时是跟随的。
+  这是上游的一处漏改，导致关掉 katex 后 CSS 仍然照发（一次多余的 23KB 请求）。
+  这里补上同样的判断：开关关掉时连 CSS 一起不发。
+
+  维护提示：升级主题后请对比本文件与上游原文件，确认差异没有被上游修掉。
+  上游一旦自己修好，删掉本文件即可。
+*/ -}}
+{{- $items := . -}}
+{{- $ctx := index $items "ctx" -}}
+{{- $name := index $items "name" -}}
+{{- $item := index $items "item" -}}
+{{- $async := index $items "async" -}}
+
+{{- $skip := false -}}
+{{- if and (eq $name "katex") (not $ctx.Site.Params.math.katex.enable) -}}
+  {{- $skip = true -}}
+{{- end -}}
+
+{{- if not $skip -}}
+  {{- if not $item -}}
+    {{- $css := $ctx.Site.Data.vendor.css -}}
+    {{- $item = index $css $name -}}
+  {{- end -}}
+
+  {{- $base := dict
+    "raw" $item
+    "src" (index (partial "helpers/vendorCdn.html" (dict "item" $item "ctx" $ctx.Site)) 0)
+    "integrity" (index (partial "helpers/vendorCdnIntegrity.html" (dict "item" $item)) 0)
+  -}}
+
+  {{- if $async -}}
+    {{- partial "helpers/asyncCss.html" $base -}}
+  {{- else -}}
+    {{- partial "helpers/css.html" $base -}}
+  {{- end -}}
+{{- end -}}

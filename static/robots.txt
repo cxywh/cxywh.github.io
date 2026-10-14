@@ -1,0 +1,6 @@
+# 本站不再对外索引，只作为两人之间的私人记录。
+# 若要允许搜索引擎收录，把下面两行 Disallow 注释掉即可。
+User-agent: *
+Disallow: /
+
+Sitemap: https://blog.cxywh.cn/sitemap.xml
