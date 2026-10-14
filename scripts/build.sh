@@ -22,4 +22,6 @@ HUGO_BIN="${HUGO_BIN:-hugo}"
 
 rm -rf public/resources
 echo "== 已剔除 public/resources（主题自托管资源包，无人引用）=="
-echo "== 产出大小：$(du -sh public 2>/dev/null | cut -f1) =="
+# 注意结尾的 || true：脚本开了 set -o pipefail，构建镜像里万一没有 du，
+# 这条管道会失败并被 set -e 当成构建失败。它只是打印统计，不该影响成败。
+echo "== 产出大小：$(du -sh public 2>/dev/null | cut -f1 || true) =="
