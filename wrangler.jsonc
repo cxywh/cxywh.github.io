@@ -1,0 +1,26 @@
+{
+  // Cloudflare Workers 静态资源部署配置。
+  //
+  // 为什么必须有这个文件：
+  // 没有它时，`npx wrangler deploy` 会进入「自动配置」流程 —— 它自己判断这是个 Hugo 站，
+  // 于是决定先跑一遍 `npx hugo` 再部署。但 hugo 不是 npm 包，直接报
+  //   npm error could not determine executable to run
+  // 导致部署失败（构建本身其实是成功的）。
+  // 仓库里存在 wrangler 配置时，wrangler 直接用配置、跳过自动配置这一段。
+  //
+  // 注意 name 必须和 Cloudflare 上已建的那个 Worker 完全一致，
+  // 否则会去创建/更新另一个 Worker。且不能改成本地默认的 master 之外的分支名。
+  "name": "cxywh-github-io",
+  "compatibility_date": "2026-10-12",
+
+  // 构建产物目录。Workers Builds 里的构建命令（bash scripts/build.sh）已经产出 public/，
+  // 这里只是告诉 wrangler 把哪个目录当静态资源上传。
+  //
+  // directory 下的 _headers / _redirects 会被 Cloudflare 读取 —— 本站的 CSP 和缓存策略
+  // 就写在 static/_headers 里，会随构建进到 public/_headers。
+  "assets": {
+    "directory": "./public",
+    // 站点根目录有 404.html（Hugo 生成），让不存在的路径返回它，而不是白页
+    "not_found_handling": "404-page"
+  }
+}

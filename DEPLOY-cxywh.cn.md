@@ -43,7 +43,31 @@
 
 ## 二、部署
 
-### Cloudflare Pages（推荐）
+### 方式一：Workers（静态资源）—— 目前在用的就是这个
+
+在 Workers & Pages → Create 建出来的是 **Worker**，不是 Pages 项目。构建分两步：
+先跑你的构建命令，再跑 `npx wrangler deploy`。
+
+| 配置项 | 值 |
+|---|---|
+| Worker 名称 | `cxywh-github-io`（必须和 `wrangler.jsonc` 里的 `name` 一致，否则会部署到另一个 Worker） |
+| 构建命令 | `bash scripts/build.sh` |
+| 部署命令 | `npx wrangler deploy`（保持默认） |
+| 环境变量 | `HUGO_VERSION` = `0.168.0`（不设的话用构建镜像的默认版本，会随镜像升级而变） |
+
+**仓库里必须有 `wrangler.jsonc`。** 没有它，`npx wrangler deploy` 会进入"自动配置"：
+它自己判断这是个 Hugo 站，于是额外跑一遍 `npx hugo`，而 hugo 不是 npm 包，直接报
+`npm error could not determine executable to run` —— 构建明明成功了，却卡在部署这一步。
+
+实测：加上 `wrangler.jsonc` 后 `npx wrangler deploy --dry-run` 通过（读 67 个文件、退出码 0），
+不再触发自动配置。
+
+绑自定义域：Worker → Settings → **Domains & Routes** → Add → Custom domain → `blog.cxywh.cn`。
+
+> 补充：Worker 的静态资源同样会读取产出目录里的 `_headers`，
+> 所以 `static/_headers` 里的 CSP 和缓存策略照样生效。
+
+### 方式二：Cloudflare Pages
 
 | 配置项 | 值 |
 |---|---|
